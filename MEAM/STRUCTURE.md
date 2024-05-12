@@ -1,0 +1,94 @@
+# OU Structure
+
+The following is an overview of the Monash Enterprise Access Model (MEAM) Tier structure.
+
+Some attributes (as noted below) are Tier-specific; however, this OU structure is deliberately consistent across Tier 0/1/2.
+
+- `Tier 0`
+  - `Groups`
+    - `Tier Control` <small>(Tier-wide control groups)</small>
+      - [Group] `T0-AdminAccounts` <small>(Contains all Admin accounts in Tier 0 zones)</small>
+      - [Group] `T0-BreakGlassAccounts` <small>(Contains all Breakglass accounts in Tier 0 zones)</small>
+      - [Group] `T0-ServiceAccounts` <small>(Contains all Service accounts in Tier 0 zones)</small>
+      - [Group] `T0-DomainJoinAccounts` <small>(Contains all Domain Join accounts in Tier 0 zones)</small>
+      - [Group] `T0-DomainRejoinAccounts` <small>(Contains all Domain Re-join accounts in Tier 0 zones)</small>
+      - [Group] `T0-PAWComputers` <small>(Contains all Tier 0 PAW computers)</small>
+      - [Group] `T0-PAWDomainJoinAccounts` <small>(Contains all PAW Domain Join accounts in Tier 0 zones)</small>
+      - [Group] `T0-PAWDomainRejoinAccounts` <small>(Contains all PAW Domain Re-Join accounts in Tier 0 zones)</small>
+      - [Group] `T0-PAWUsers` <small>(Contains all Users who can authenticate to Tier 0 PAWs)</small>
+      - [Group] `T0-ZoneComputers` <small>(Contains all Computer objects in Tier 0 zones)</small>
+      - [Group / T0 Only] `T-All-AdminAccounts` <small>(All Admin Accounts in the tiered structure)</small>
+      - [Group / T0 Only] `T-All-ServiceAccounts` <small>(All Service Accounts in the tiered structure)</small>
+      - [Group / T0 Only] `T-All-BreakGlassAccounts` <small>(All Breakglass Accounts in the tiered structure)</small>
+      - [Group / T0 Only] `T-All-DomainJoinAccounts` <small>(All Domain Join Accounts in the tiered structure)</small>
+      - [Group / T0 Only] `T-All-DomainReJoinAccounts` <small>(All Domain Rejoin Accounts in the tiered structure)</small>
+      - [Group / T0 Only] `T-All-PAWComputers` <small>(All PAW Computers in the tiered structure)</small>
+      - [Group / T0 Only] `T-All-ZoneComputers` <small>(All Computers (excluding PAWs) in the tiered structure)</small>
+    - `Delegation` <small>(Delegation groups at the Tier level)</small>
+      - [Group] `T0-DLG-PAW-Accounts-GPOLink` <small>(Delegation of 'Link GPO' in Tier 0 > PAW > Accounts)</small>
+      - [Group] `T0-DLG-PAW-Accounts-GPOModelling` <small>(Delegation of 'Execute GPO Modelling' in Tier 0 > PAW > Accounts)</small>
+      - [Group] `T0-DLG-PAW-Accounts-ResetPwd` <small>(Delegation of 'Reset Account Passsword' in Tier 0 > PAW > Accounts)</small>
+      - [Group] `T0-DLG-PAW-Accounts-UserRW` <small>(Delegation of 'Modify User Objects' in Tier 0 > PAW > Accounts)</small>
+      - [Group] `T0-DLG-PAW-Computers-BitlockerRecovery` <small>(Delegation of 'Read Bitlocker Keys' in Tier 0 > PAW > Computers)</small>
+      - [Group] `T0-DLG-PAW-Computers-ComputerDomainJoin` <small>(Delegation of 'Join Computer' in Tier 0 > PAW > Computers)</small>
+      - [Group] `T0-DLG-PAW-Computers-ComputerDomainReJoin` <small>(Delegation of 'Rejoin Computer' in Tier 0 > PAW > Computers)</small>
+      - [Group] `T0-DLG-PAW-Computers-ComputerMove` <small>(Delegation of 'Move Computer' in Tier 0 > PAW > Computers)</small>
+      - [Group] `T0-DLG-PAW-Computers-ComputerResetPwd` <small>(Delegation of 'Reset Computer Password' in Tier 0 > PAW > Computers)</small>
+      - [Group] `T0-DLG-PAW-Computers-ComputerRW` <small>(Delegation of 'Read/Write Computer' in Tier 0 > PAW > Computers)</small>
+      - [Group] `T0-DLG-PAW-Computers-ComputerUacWrite` <small>(Delegation of 'Write Computer UAC' in Tier 0 > PAW > Computers)</small>
+      - [Group] `T0-DLG-PAW-Computers-GPOLink` <small>(Delegation of 'Link GPO' in Tier 0 > PAW > Computers)</small>
+      - [Group] `T0-DLG-PAW-Computers-GPOModelling` <small>(Delegation of 'Execute GPO Modelling' in Tier 0 > PAW > Computers)</small>
+      - [Group] `T0-DLG-PAW-Computers-LAPSRead` <small>(Delegation of 'Read LAPS Password' in Tier 0 > PAW > Computers)</small>
+      - [Group] `T0-DLG-PAW-Computers-LAPSReset` <small>(Delegation of 'Reset LAPS Password' in Tier 0 > PAW > Computers)</small>
+      - [Group] `T0-DLG-PAW-Computers-OrgUnitRW` <small>(Delegation of 'Modify OUs' in Tier 0 > PAW > Computers)</small>
+      - [Group] `T0-DLG-PAW-Groups-GroupRW` <small>(Delegation to 'Read/Write Groups' in Tier 0 > PAW > Groups)</small>
+      - [Group] `T0-DLG-PAW-Groups-MemberRW` <small>(Delegation of 'Modify Group Members' in Tier 0 > PAW > Groups)</small>
+  - `PAW` <small>(Container for Tier 0 PAWs)</small>
+    - `Accounts`
+      - `Service Accounts`
+        - [User] `t0-dj-join-paw` <small>(Tier 0 PAW Domain Join Account)</small>
+        - [User] `t0-dj-rejoin-paw` <small>(Tier 0 PAW Domain Rejoin Account)</small>
+    - `Computers` <small>(Tier 0 PAW Computers)</small>
+    - `Groups` <small>(Tier 0 PAW Management Groups)</small>
+  - `Zones` <small>(Container for Tier 0 Zones)</small>
+    - `Zone 0X`
+      - [GPO] `Z0X-UserRightsAssignment` <small>(A GPO enforcing URA policies across the Zone - using groups in Zone 0X > Groups > Zone Control)</small>
+      - `Accounts`
+        - `Admin Accounts` <small>(Zoned admin (e.g. 'human') accounts)</small>
+        - `Service Accounts` <small>(Zoned service (e.g. 'machine') accounts - both 'user'-style and gMSA)</small>
+            - [User] `z0x-dj-join-win` <small>(Zone 0X Windows Domain Join Account)</small>
+            - [User] `z0x-dj-rejoin-win` <small>(Zone 0X Windows Domain Rejoin Account)</small>
+      - `Groups`
+        - `Delegation`
+          - [Group] `Z0X-DLG-Accounts-GPOLink` <small>(Accounts delegated 'GPOLink' permissions to the Accounts OU in the {Service} service)</small>
+          - [Group] `Z0X-DLG-Accounts-GPOModelling` <small>(Accounts delegated 'GPOModelling' permissions to the Accounts OU  in the {Service} service)</small>
+          - [Group] `Z0X-DLG-Accounts-ResetPwd` <small>(Accounts delegated 'ResetPwd' permissions to the Accounts OU  in the {Service} service)</small>
+          - [Group] `Z0X-DLG-Accounts-UserRW` <small>(Accounts delegated 'UserRW' permissions to the Accounts OU in the {Service} service)</small>
+          - [Group] `Z0X-DLG-{Service}-Computers-BitlockerRecovery` <small>(Accounts delegated 'BitlockerRecovery' permissions on the Computers OU in the {Service} service)</small>
+          - [Group] `Z0X-DLG-{Service}-Computers-ComputerResetPwd` <small>(Accounts delegated 'ComputerResetPwd' permissions on the Computers OU in the {Service} service)</small>
+          - [Group] `Z0X-DLG-{Service}-Computers-ComputerRW` <small>(Accounts delegated 'ComputerRW' permissions on the Computers OU in the {Service} service)</small>
+          - [Group] `0X-DLG-{Service}-Computers-ComputerUacWrite` <small>(Accounts delegated 'ComputerUacWrite' permissions on the Computers OU in the {Service} service)</small>
+          - [Group] `Z0X-DLG-{Service}-Computers-GPOLink` <small>(Accounts delegated 'GPOLink' permissions on the Computers OU in the {Service} service)</small>
+          - [Group] `Z0X-DLG-{Service}-Computers-LAPSRead` <small>(Accounts delegated 'LapsRead' permissions on the Computers OU in the {Service} service)</small>
+          - [Group] `Z0X-DLG-{Service}-Computers-LAPSReset` <small>(Accounts delegated 'LAPSReset' permissions on the Computers OU in the {Service} service)</small>
+          - [Group] `Z0X-DLG-{Service}-Computers-OrgUnitRW` <small>(Accounts delegated 'OrgUnitRW' permissions on the Computers OU in the {Service} service)</small>
+          - [Group] `Z0X-DLG-{Service}-Groups-GroupRW` <small>(Accounts delegated 'GroupRW' permissions on the Groups OU in the {Service} service)</small>
+          - [Group] `Z0X-DLG-{Service}-Groups-MemberRW` <small>(Accounts delegated 'GroupMemberRW' permissions the Groups OU in the {Service} service)</small>
+        - `Zone Control`
+          - [Group] `Z0X-AdminAccounts` <small>(Contains all admin accounts in Zone 0X)</small>
+          - [Group] `Z0X-BreakGlassAccounts` <small>(Contains all break glass accounts in Zone 0X)</small>
+          - [Group] `Z0X-DomainJoinAccounts` <small>(Contains all domain join accounts in Zone 0X)</small>
+          - [Group] `Z0X-DomainReJoinAccounts` <small>(Contains all domain rejoin accounts in Zone 0X)</small>
+          - [Group] `Z0X-ServiceAccounts` <small>(Contains all service accounts in Zone 0X)</small>
+          - [Group] `Z0X-ZoneComputers` <small>(Contains all computer objects (excluding PAWs) in Zone 0X)</small>
+          - [Group] `Z0X-Deny access to this computer from the network` <small>(Applied as a rights assignment in the 'Z0X-UserRightsAssignment' URA GPO)</small>
+          - [Group] `Z0X-Deny log on as a batch job` <small>(Applied as a rights assignment in the 'Z0X-UserRightsAssignment' URA GPO)</small>
+          - [Group] `Z0X-Deny log on as a service` <small>(Applied as a rights assignment in the 'Z0X-UserRightsAssignment' URA GPO)</small>
+          - [Group] `Z0X-Deny log on locally` <small>(Applied as a rights assignment in the 'Z0X-UserRightsAssignment' URA GPO)</small>
+          - [Group] `Z0X-Deny log on through Remote Desktop Services` <small>(Applied as a rights assignment in the 'Z0X-UserRightsAssignment' URA GPO)</small>
+      - `Services`
+        - `ServiceABC`
+          - `Computers` <small>(Servers or workstations belonging to the 'ServiceABC' service)</small>
+          - `Groups` <small>(Groups belonging to the 'ServiceABC' service)</small>
+            - `JIT Groups` <small>(Per-machine Local Administrator JIT groups  - for use with Lithnet Access Manager)</small>
+            - `JIT Authorization Groups` <small>(JIT Authorization Groups containing permitted JIT user accounts - for use with Lithnet Access Manager)</small>
