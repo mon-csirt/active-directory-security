@@ -1,12 +1,12 @@
 # Monash Enterprise Access Model (MEAM)
 
 # Overview
-This document provides a high-level overview of the "Monash Enterprise Access Model" (MEAM) - a model for tiering Active Directory that builds heavily on the [Microsoft Enterprise Access Model](https://learn.microsoft.com/en-us/security/privileged-access-workstations/privileged-access-access-model).
+This document provides a high-level overview of the "Monash Enterprise Access Model" (MEAM) - a model for tiering Active Directory (AD) that builds heavily on the [Microsoft Enterprise Access Model](https://learn.microsoft.com/en-us/security/privileged-access-workstations/privileged-access-access-model).
 
 The MEAM was developed by the Enterprise Engineering team at Monash University, Australia.
 
 The MEAM builds on three core components:
-- The __administrative tier__: an "macro" partition of AD based on the level of privilege & control.
+- The __administrative tier__: a "macro" partition of AD based on the level of privilege & control.
 - The __zone__: a horizontal split of a *tier*, where *services* are placed into *silos* preventing lateral movement.
 - The __service__: a delegation target within a *zone*, containing computers and groups.
 
@@ -32,12 +32,12 @@ This model prevents escalation of privilege by restricting what admins can __con
 
 ### PAWs
 
-We want to ensure that all privilege access happens on a trusted device.
+We want to ensure that all privileged access happens on a trusted device.
 
 This is where PAWs - Privileged Access Workstations - come in.
 
 A Privileged Access Workstation (PAW) is a dedicated workstation for sensitive tasks, and it gives administrators a secure device to work from.
-- A PAW is for management only - it can’t be used for on-administrative tasks, such as email and web browsing.
+- A PAW is for management only - it can’t be used for non-administrative tasks such as email and web browsing.
 - A user is given a “day-to-day” VM or SOE Device where they can do their “productivity work”
 
 The PAW design ensures that there is a secure, hardware-based root of trust for all privileged management. PAWs are deliberately locked down to serve one purpose: administering critical systems.
@@ -51,7 +51,7 @@ For example, this might be:
 - Managing secure databases
 - Managing services that can take control of the environment (like SCCM)
 
-Their are PAWs in each tier of the environment, so while a “domain admin” would have a Tier 0 PAW, a workstation administrator would have a Tier 1 PAW.
+There are PAWs in each tier of the environment, so while a “domain admin” would have a Tier 0 PAW, a workstation administrator would have a Tier 1 PAW.
 
 So, what makes a PAW trusted?
 - All hardware-based security mechanisms enabled.
@@ -63,13 +63,13 @@ All in all, the use of PAWs means that privileged credentials only appear on sec
 
 ## Zones
 
-The first “new” concept in the MEAM model is what we’ve called a "zone" - The term zone comes from “blast zone”, and they break up big tiers into smaller "chunks".
+The first “new” concept in the MEAM model is what we’ve called a "zone". The term zone comes from “blast zone”, and they break up big tiers into smaller "chunks".
 
-Zones group accounts and computers together, and we prevent authentication between zones. By splitting tiers up, we reduce the blast radius of an attack. The core concept is simple: if one zone is compromised, neighbors should not be affected.
+Zones group accounts and computers together, and we prevent authentication between zones. By splitting tiers into zones, we reduce the blast radius of an attack. The core concept is simple: if one zone is compromised, neighbors should not be affected.
 
 In other words, if a bomb goes off in one zone, the zone’s neighbors are shielded.
 
-Zones enclose accounts, servers and computers in *Authentication Silos*, where the actions in one zone cannot impact another.
+Zones enclose accounts, servers, and computers in *Authentication Silos*, where the actions in one zone cannot impact another.
 
 ![Monash Enterprise Access Model - Zones](../images/monash-adv3-zonesplit.png)
 
@@ -78,7 +78,7 @@ Everything in a zone has a common purpose. Machines and accounts within a zone c
 The name ‘zone’ comes from ‘blast zone’. This is important to keep in mind when interacting with resources in zones: they are a security boundary to ensure that compromises in one area do not lead to large-scale breaches.
 
 Zones are named in the form "Zone (0|1|2)[A-Z]", where:
-  - The numeric portion corresponds to the Tier identifier, and
+  - The numeric portion corresponds to the Tier identifier
   - The alphabetic portion is a unique Zone identifier
 
 ### Accounts
@@ -98,11 +98,11 @@ This can be broken down into three parts:
 These accounts only work on PAWs and machines within the user's zone; authentication will be rejected anywhere else.
 
 In the MEAM, all "zoned" *user* accounts are also members of the [Protected Users Security Group](https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/protected-users-security-group), and are afforded all protections that this group offers.
-  - *Note*: "gMSA"-style service accounts, of course, are *not* members of the Protected Users security group.
+  - *Note*: Group Managed Service Accounts (gMSAs), of course, are *not* members of the Protected Users security group.
 
 #### Authentication
 
-All zoned user accounts require smartcard authentication - typically using a PIV token such as a [Yubikey](https://developers.yubico.com/yubico-piv-tool/YubiKey_PIV_introduction.html).
+All zoned user accounts require smartcard authentication - typically using a Personal Identity Verification (PIV) token such as a [Yubikey](https://developers.yubico.com/yubico-piv-tool/YubiKey_PIV_introduction.html).
 - *Note*: it is recommended to automatically rotate the underlying password on smartcard-only accounts, as the enforcement step will only scramble the password once.
 
 Where possible, zoned *service accounts* are configured as gMSAs.
@@ -115,7 +115,7 @@ At the core of the “zone” model is an AD feature called "Authentication Poli
 
 Authentication Silos and Authentication Policies are a new-ish AD feature. By “new-ish”, we mean they became available in Server 2012 R2.
 
-At the most basic level, they are essentially an account/device firewall build into AD that locks specific accounts to specific machines, or vice-versa.
+At the most basic level, they are essentially an account/device firewall built into AD that locks specific accounts to specific machines or vice-versa.
 
 In the MEAM, we have implemented Authentication Silos and Policies in two ways:
 - __PAW Silos__: Per-tier "computer" silos that contain PAW machines.
