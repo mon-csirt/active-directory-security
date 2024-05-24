@@ -129,21 +129,21 @@ Create-PAWSilo -TierID "2" -PawUserGroupSID (Get-ADGroup "T2-PAWUsers").SID
 # Create per-zone user silos
 Create-UserSilo -TierID "0" -ZoneID "A" -DASilo -DestinationComputerSIDs @(
     (Get-ADGroup "T0-PAWComputers").SID
-    (Get-ADGroup "T0-ZoneComputers").SID
+    (Get-ADGroup "Z0A-ZoneComputers").SID
     (Get-ADGroup "Domain Controllers").SID
 )
 Create-UserSilo -TierID "0" -ZoneID "A" -DestinationComputerSIDs @(
     (Get-ADGroup "T0-PAWComputers").SID
-    (Get-ADGroup "T0-ZoneComputers").SID
+    (Get-ADGroup "Z0A-ZoneComputers").SID
 )
 
 Create-UserSilo -TierID "1" -ZoneID "A" -DestinationComputerSIDs @(
     (Get-ADGroup "T1-PAWComputers").SID
-    (Get-ADGroup "T1-ZoneComputers").SID
+    (Get-ADGroup "Z1A-ZoneComputers").SID
 )
 Create-UserSilo -TierID "2" -ZoneID "A" -DestinationComputerSIDs @(
     (Get-ADGroup "T2-PAWComputers").SID
-    (Get-ADGroup "T2-ZoneComputers").SID
+    (Get-ADGroup "Z2A-ZoneComputers").SID
 )
 
 ```
