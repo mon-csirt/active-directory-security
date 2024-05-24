@@ -7,7 +7,7 @@ The "Monash Enterprise Access Model" (MEAM) is a model for tiering Active Direct
 The MEAM is developed by the Enterprise Engineering team at Monash University, Australia.
 
 The MEAM builds on three core components:
-- The __administrative tier__: an "macro" partition of AD based on the level of privilege & control.
+- The __administrative tier__: a "macro" partition of AD based on the level of privilege & control.
 - The __zone__: a horizontal split of a *tier*, where *services* are placed into *silos* preventing lateral movement.
 - The __service__: a delegation target within a *zone*, containing computers and groups.
 
