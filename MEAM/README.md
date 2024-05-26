@@ -30,6 +30,32 @@ This model prevents escalation of privilege by restricting what admins can __con
 > 
 > -- [Protecting Tier 0 the Modern Way](https://techcommunity.microsoft.com/t5/core-infrastructure-and-security/protecting-tier-0-the-modern-way/ba-p/4052851)
 
+Tiering is a model for splitting up AD into different _security domains_, and putting accounts, groups and computer into different _buckets_ based on how much control they have over the environment.
+
+While it’s a bit more theoretical than practical, it’s usually implemented using complex Group Policies and ACLs in AD.
+
+The core concept is fairly simple:
+- Sensitive credentials shouldn’t be exposed to less trusted machines; in other words: “authentication goes upwards”
+- Machines that control other machines should be protected; in other words: “control down”
+
+Tiering is a good, 'better than nothing’ approach to hardening an Active Directory environment.
+
+When implemented correctly, it ensures that privileged accounts/services are not exposed to less secure systems.
+
+So what do the tiers actually mean?
+
+Generally we see 3 tiers:
+- Tier 0 - Control Plane:  the “crown jewels” of a domain
+  - Contains Domain Controllers & Domain Admins, PKI, DC Hypervisors, Tier 0 privileged accounts 
+- Tier 1 - Management Plane: services that manage other systems
+  - Contains services such as SCCM, File & Print Management, Backups, SQL, Workload Hypervisors, and Tier 1 privileged accounts
+- Tier 2 - Workload Plane: where your workstations, servers and end users sit
+  - Contains Workstations, Servers and general user accounts.
+
+So in this model, for example, a “domain admin” can’t log into a workstation, and an end user can’t get into sensitive Tier 1 systems.
+
+So if a privileged user can’t login to a workstation, what do they use?
+
 ### PAWs
 
 We want to ensure that all privileged access happens on a trusted device.
