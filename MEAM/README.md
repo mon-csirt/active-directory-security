@@ -161,9 +161,10 @@ Silos and URAs work in tandem to ensure the right identity has access and authen
 
 ### Zones in Practice
 
-Taking a standard environment, there are many ways one could split *tiers* into *zones*.
+When looking at a typical AD environment, there are many ways you could split *tiers* into *zones*.
 
-A good way to think about it is though the 'Enterprise Access Model's view of "control"; we want to ensure that zones can be *segmented* from each other to ensure that if one is breached, the impact is as small as possible.
+A good way to think about it is through the 'Enterprise Access Model's view of "control":
+- We want to ensure that zones can be *segmented* from each other to ensure that if one is breached, the impact is as small as possible.
 
 ---
 
