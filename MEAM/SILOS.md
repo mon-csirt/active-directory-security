@@ -38,13 +38,17 @@ function Create-UserSilo {
         [switch]$DASilo
     )
 
+    # Create a list of `SID(<SID>)`s of Computer groups these users
+    # can authenticate to
     $Destinations = ($DestinationComputerSIDs | %{ "SID($_)"}) -join ","
 
     if(($TierID -eq "0") -and ($DASilo)) {
+        # Tier 0 has a special "Domain Admin" silo. No service accounts sit in here.
         $Prefix = "Z$TierID$ZoneID-DA"
         $UserAllowedToAuthenticateFrom = "O:SYG:SYD:(XA;OICI;CR;;;WD;(Member_of_any {$($Destinations)}))"
         $ServiceAllowedToAuthenticateFrom = $Null
     } else {
+        # Create a standard silo for *users* and *service accounts*
         $Prefix = "Z$TierID$ZoneID-User"
         $UserAllowedToAuthenticateFrom = "O:SYG:SYD:(XA;OICI;CR;;;WD;(Member_of_any {$($Destinations)}))"
         $ServiceAllowedToAuthenticateFrom = "O:SYG:SYD:(XA;OICI;CR;;;WD;(Member_of_any {$($Destinations)}))"
@@ -60,9 +64,11 @@ function Create-UserSilo {
         Server = $DC
     }
 
+    # Create a *policy*
     $Policy = New-ADAuthenticationPolicy @PolicyParameters
     $PolicyDN = (Get-ADADAuthenticationPolicy -Identity $PolicyParameters.Name -Server $DC).distinguishedName
 
+    # Attach the *authentication policy* to an *authentication policy silo*
     $SiloParameters = @{
         Name = "$($Prefix)Silo"
         Enforced = $Enforced
@@ -88,9 +94,10 @@ function Create-PAWSilo {
 
     if($TierID -eq "0") {
         # Allow DAs on Tier 0 PAWs
-        $ComputerAllowedToAuthenticateTo = "O:SYG:SYD:(XA;OICI;CR;;;WD;(Member_of_any {SID($PawUserSID),SID(DA)}))"
+        $ComputerAllowedToAuthenticateTo = "O:SYG:SYD:(XA;OICI;CR;;;WD;(Member_of_any {SID($PawUserGroupSID),SID(DA)}))"
     } else {
-        $ComputerAllowedToAuthenticateTo = "O:SYG:SYD:(XA;OICI;CR;;;WD;(Member_of_any {SID($PawUserSID)}))"
+        # Otherwise, only allow the PAW user group
+        $ComputerAllowedToAuthenticateTo = "O:SYG:SYD:(XA;OICI;CR;;;WD;(Member_of_any {SID($PawUserGroupSID)}))"
     }
 
     $Prefix = "T$TierID-PAW"
@@ -103,6 +110,7 @@ function Create-PAWSilo {
         Server = $DC
     }
 
+    # Create an *authentication policy*
     $Policy = New-ADAuthenticationPolicy @PolicyParameters
     $PolicyDN = (Get-ADADAuthenticationPolicy -Identity $PolicyParameters.Name -Server $DC).distinguishedName
 
@@ -118,32 +126,45 @@ function Create-PAWSilo {
         Server = $DC
     }
 
+    # Attach the *authentication policy* to an *authentication policy silo*
     New-ADAuthenticationPolicySilo @SiloParameters
 }
 
+#
 # Create PAW silos in each tier
+#
+
+# --> Only "Tier X PAW Users" can log into Tier X PAWs
 Create-PAWSilo -TierID "0" -PawUserGroupSID (Get-ADGroup "T0-PAWUsers").SID
 Create-PAWSilo -TierID "1" -PawUserGroupSID (Get-ADGroup "T1-PAWUsers").SID
 Create-PAWSilo -TierID "2" -PawUserGroupSID (Get-ADGroup "T2-PAWUsers").SID
 
+#
 # Create per-zone user silos
+#
+
+# Zone 0A *Domain Admins* can log into: Tier 0 PAWs, Zone 0A Servers & Domain Controllers
 Create-UserSilo -TierID "0" -ZoneID "A" -DASilo -DestinationComputerSIDs @(
     (Get-ADGroup "T0-PAWComputers").SID
     (Get-ADGroup "Z0A-ZoneComputers").SID
     (Get-ADGroup "Domain Controllers").SID
 )
+
+# Zone 0A users can log into: Tier 0 PAWs & Zone 0A Servers
 Create-UserSilo -TierID "0" -ZoneID "A" -DestinationComputerSIDs @(
     (Get-ADGroup "T0-PAWComputers").SID
     (Get-ADGroup "Z0A-ZoneComputers").SID
 )
 
+# Zone 1A users can log into: Tier 1 PAWs & Zone 1A Servers
 Create-UserSilo -TierID "1" -ZoneID "A" -DestinationComputerSIDs @(
     (Get-ADGroup "T1-PAWComputers").SID
     (Get-ADGroup "Z1A-ZoneComputers").SID
 )
+
+# Zone 2A users can log into: Tier 2 PAWs & Zone 2A Servers
 Create-UserSilo -TierID "2" -ZoneID "A" -DestinationComputerSIDs @(
     (Get-ADGroup "T2-PAWComputers").SID
     (Get-ADGroup "Z2A-ZoneComputers").SID
 )
-
 ```
