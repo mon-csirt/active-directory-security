@@ -22,7 +22,7 @@ In the MEAM, we have implemented Authentication Silos and Policies in two ways:
 
 ## Example
 
-The following script is an example of how to create Authentication Policies and Authentication Policy Silos to MEAM design:
+The following script is an example of how to create Authentication Policies and Authentication Policy Silos to match the MEAM design:
 
 - __User Silos__ are used to lock a set of accounts (either "user" or gMSA accounts) to a specific set of computers. When enforced, the Domain Controller will prevent these users from authenticating on machines not specificed in the silo.
 - __PAW Silos__ are used to enforce that only users in a specific tier can authenticate to PAW devices in that tier. Like user silos, when enforced, the Domain Controller will prevent unauthorized users authenticating to PAW devices.
