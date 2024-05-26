@@ -113,14 +113,6 @@ Each *zone* in the MEAM acts as a container for *accounts*. Privileged accounts 
 
 As an administrator, a user is responsible for administrative accounts in each zone they have access to. There are no privileged accounts that can be used across zones.
 
-Administrative accounts typically look something like:
-> z1g-mgr-jsmi0001
-
-This can be broken down into three parts:
-- "z1g": This account sits in Zone 1G (Tier 1 / Zone G).
-- "mgr": This is a management account
-- "jsmi0001": This account is owned by the user with the standard account name “jsmi0001”
-
 These accounts only work on PAWs and machines within the user's zone; authentication will be rejected anywhere else.
 
 In the MEAM, all "zoned" *user* accounts are also members of the [Protected Users Security Group](https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/protected-users-security-group), and are afforded all protections that this group offers.
