@@ -35,7 +35,8 @@ function Create-UserSilo {
         [string]$ZoneID,
         [string[]]$DestinationComputerSIDs,
         [switch]$Enforced,
-        [switch]$DASilo
+        [switch]$DASilo,
+        [string]$DC
     )
 
     # Create a list of `SID(<SID>)`s of Computer groups these users
@@ -90,6 +91,7 @@ function Create-PAWSilo {
         [string]$TierID,
         [string]$PawUserGroupSID,
         [switch]$Enforced,
+        [string]$DC
     )
 
     if($TierID -eq "0") {
@@ -134,10 +136,12 @@ function Create-PAWSilo {
 # Create PAW silos in each tier
 #
 
+$DC = (Get-ADDomain).InfrastructureMaster
+
 # --> Only "Tier X PAW Users" can log into Tier X PAWs
-Create-PAWSilo -TierID "0" -PawUserGroupSID (Get-ADGroup "T0-PAWUsers").SID
-Create-PAWSilo -TierID "1" -PawUserGroupSID (Get-ADGroup "T1-PAWUsers").SID
-Create-PAWSilo -TierID "2" -PawUserGroupSID (Get-ADGroup "T2-PAWUsers").SID
+Create-PAWSilo -TierID "0" -PawUserGroupSID (Get-ADGroup "T0-PAWUsers").SID -DC $DC
+Create-PAWSilo -TierID "1" -PawUserGroupSID (Get-ADGroup "T1-PAWUsers").SID -DC $DC
+Create-PAWSilo -TierID "2" -PawUserGroupSID (Get-ADGroup "T2-PAWUsers").SID -DC $DC
 
 #
 # Create per-zone user silos
@@ -148,23 +152,23 @@ Create-UserSilo -TierID "0" -ZoneID "A" -DASilo -DestinationComputerSIDs @(
     (Get-ADGroup "T0-PAWComputers").SID
     (Get-ADGroup "Z0A-ZoneComputers").SID
     (Get-ADGroup "Domain Controllers").SID
-)
+) -DC $DC
 
 # Zone 0A users can log into: Tier 0 PAWs & Zone 0A Servers
 Create-UserSilo -TierID "0" -ZoneID "A" -DestinationComputerSIDs @(
     (Get-ADGroup "T0-PAWComputers").SID
     (Get-ADGroup "Z0A-ZoneComputers").SID
-)
+) -DC $DC
 
 # Zone 1A users can log into: Tier 1 PAWs & Zone 1A Servers
 Create-UserSilo -TierID "1" -ZoneID "A" -DestinationComputerSIDs @(
     (Get-ADGroup "T1-PAWComputers").SID
     (Get-ADGroup "Z1A-ZoneComputers").SID
-)
+) -DC $DC
 
 # Zone 2A users can log into: Tier 2 PAWs & Zone 2A Servers
 Create-UserSilo -TierID "2" -ZoneID "A" -DestinationComputerSIDs @(
     (Get-ADGroup "T2-PAWComputers").SID
     (Get-ADGroup "Z2A-ZoneComputers").SID
-)
+) -DC $DC
 ```
