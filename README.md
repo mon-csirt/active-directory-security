@@ -67,7 +67,7 @@ __References__:
 
 Many organisations have "user"-type service accounts sitting around with passwords that never change; if the password leaks, it’s game over.
 
-Many of these accoutns are ripe for [Kerberoasting](https://www.crowdstrike.com/cybersecurity-101/kerberoasting/) and [PtH](https://www.crowdstrike.com/cybersecurity-101/pass-the-hash/) attacks.
+Many of these accounts are ripe for [Kerberoasting](https://www.crowdstrike.com/cybersecurity-101/kerberoasting/) and [PtH](https://www.crowdstrike.com/cybersecurity-101/pass-the-hash/) attacks.
 
 AD has a special type of account called a gMSA (Group Managed Service Account)
 - One or more computers can be delegated to read the encrypted password from AD
